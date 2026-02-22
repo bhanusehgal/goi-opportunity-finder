@@ -1,0 +1,219 @@
+"""Connector for GeM bids."""
+
+from __future__ import annotations
+
+from datetime import datetime, timedelta, timezone
+import hashlib
+import json
+import logging
+import os
+from pathlib import Path
+import re
+import time
+from typing import Any
+from urllib.parse import urljoin
+
+from bs4 import BeautifulSoup
+import requests
+
+SOURCE = "gem"
+URL = "https://gem.gov.in/bids"
+DEFAULT_USER_AGENT = "GoIOpportunityFinder/1.0 (+ops@example.com)"
+MAX_CACHE_AGE_HOURS = 6
+
+
+def fetch_opportunities(
+    cache_dir: Path,
+    logger: logging.Logger,
+    timeout: int = 25,
+    max_items: int = 80,
+) -> list[dict[str, Any]]:
+    """Fetch latest GeM bid opportunities."""
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    html = _fetch_html_with_cache(URL, cache_dir=cache_dir, logger=logger, timeout=timeout)
+    if html:
+        parsed = _parse_listing(html, base_url=URL, max_items=max_items)
+        if parsed:
+            logger.info("GeM parsed %s records", len(parsed))
+            return parsed
+
+    logger.warning("GeM parsing failed, using fallback sample records.")
+    return _sample_records()
+
+
+def _cache_paths(cache_dir: Path) -> tuple[Path, Path]:
+    digest = hashlib.sha256(URL.encode("utf-8")).hexdigest()[:16]
+    return (
+        cache_dir / f"{SOURCE}_{digest}.html",
+        cache_dir / f"{SOURCE}_{digest}.meta.json",
+    )
+
+
+def _load_fresh_cache(html_path: Path, meta_path: Path) -> str | None:
+    if not html_path.exists() or not meta_path.exists():
+        return None
+    try:
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        fetched_at = datetime.fromisoformat(meta["fetched_at"])
+        if datetime.now(timezone.utc) - fetched_at <= timedelta(hours=MAX_CACHE_AGE_HOURS):
+            return html_path.read_text(encoding="utf-8", errors="ignore")
+    except Exception:
+        return None
+    return None
+
+
+def _save_cache(html_path: Path, meta_path: Path, html: str) -> None:
+    html_path.write_text(html, encoding="utf-8")
+    meta_path.write_text(
+        json.dumps({"fetched_at": datetime.now(timezone.utc).isoformat()}, ensure_ascii=True),
+        encoding="utf-8",
+    )
+
+
+def _fetch_html_with_cache(
+    url: str,
+    cache_dir: Path,
+    logger: logging.Logger,
+    timeout: int,
+) -> str | None:
+    html_path, meta_path = _cache_paths(cache_dir)
+    cached = _load_fresh_cache(html_path, meta_path)
+    if cached:
+        logger.info("GeM cache hit")
+        return cached
+
+    headers = {"User-Agent": os.getenv("GOI_FINDER_USER_AGENT", DEFAULT_USER_AGENT)}
+    delay = float(os.getenv("REQUEST_DELAY_SECONDS", "1.5"))
+    for attempt in range(1, 4):
+        try:
+            time.sleep(delay)
+            response = requests.get(url, headers=headers, timeout=timeout)
+            if response.status_code == 200 and response.text.strip():
+                _save_cache(html_path, meta_path, response.text)
+                return response.text
+            logger.warning(
+                "GeM request non-200/empty (attempt=%s status=%s)",
+                attempt,
+                response.status_code,
+            )
+        except requests.RequestException as exc:
+            logger.warning("GeM request failed (attempt=%s): %s", attempt, exc)
+
+    if html_path.exists():
+        logger.info("GeM using stale cache")
+        return html_path.read_text(encoding="utf-8", errors="ignore")
+    return None
+
+
+def _extract_dates(text: str) -> list[str]:
+    patterns = [
+        r"\b\d{4}-\d{2}-\d{2}\b",
+        r"\b\d{2}-\d{2}-\d{4}\b",
+        r"\b\d{2}/\d{2}/\d{4}\b",
+        r"\b\d{1,2}\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s\d{4}\b",
+    ]
+    matches: list[str] = []
+    for pattern in patterns:
+        matches.extend(re.findall(pattern, text, flags=re.IGNORECASE))
+    return matches
+
+
+def _extract_bid_id(text: str, href: str) -> str | None:
+    patterns = [
+        r"\bBID[-\s:/]*([A-Za-z0-9-]{4,})\b",
+        r"\bGEM[-\s:/]*([A-Za-z0-9-]{4,})\b",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.IGNORECASE)
+        if match:
+            return match.group(1)
+    href_match = re.search(r"([A-Za-z0-9_-]{8,})", href)
+    if href_match:
+        return href_match.group(1)
+    return None
+
+
+def _parse_listing(html: str, base_url: str, max_items: int) -> list[dict[str, Any]]:
+    # TODO: replace heuristic parsing with stable GeM endpoint parsing when available.
+    soup = BeautifulSoup(html, "html.parser")
+    records: list[dict[str, Any]] = []
+
+    candidate_nodes = soup.select("a[href]")
+    for node in candidate_nodes:
+        href = node.get("href", "").strip()
+        if not href:
+            continue
+        text = node.get_text(" ", strip=True)
+        if len(text) < 12:
+            continue
+        if not re.search(r"\b(bid|tender|rfp|proposal)\b", text, flags=re.IGNORECASE):
+            continue
+        if "javascript:" in href.lower():
+            continue
+
+        full_link = urljoin(base_url, href)
+        parent_text = node.parent.get_text(" ", strip=True) if node.parent else text
+        combined = f"{text} {parent_text}"
+        source_id = _extract_bid_id(combined, full_link)
+        if not source_id:
+            source_id = hashlib.sha256(f"{text}|{full_link}".encode("utf-8")).hexdigest()[:16]
+
+        dates = _extract_dates(combined)
+        published_date = dates[0] if dates else None
+        deadline = dates[-1] if len(dates) > 1 else None
+        dept_match = re.search(
+            r"(?:Department|Ministry|Buyer)[:\-]\s*([A-Za-z0-9,&() .-]{5,})",
+            combined,
+            flags=re.IGNORECASE,
+        )
+        buyer = dept_match.group(1).strip() if dept_match else None
+
+        records.append(
+            {
+                "source_id": source_id,
+                "title": text,
+                "buyer": buyer,
+                "org_path": buyer,
+                "summary": combined,
+                "published_date": published_date,
+                "deadline": deadline,
+                "url": full_link,
+                "documents": [],
+                "source_status": "open",
+            }
+        )
+
+        if len(records) >= max_items:
+            break
+
+    return records
+
+
+def _sample_records() -> list[dict[str, Any]]:
+    now = datetime.now(timezone.utc).date()
+    return [
+        {
+            "source_id": "GEM-SAMPLE-001",
+            "title": "Bid for Industrial Robotics Cell Setup and Integration",
+            "buyer": "Department of Heavy Industry",
+            "org_path": "Government e-Marketplace",
+            "summary": "GeM bid for robotics automation line, integrator services, and AMC.",
+            "published_date": now.isoformat(),
+            "deadline": (now + timedelta(days=20)).isoformat(),
+            "url": "https://gem.gov.in/sample/robotics-bid",
+            "documents": ["https://gem.gov.in/sample/robotics-bid/rfp.pdf"],
+            "source_status": "open",
+        },
+        {
+            "source_id": "GEM-SAMPLE-002",
+            "title": "RFP for Network Security Monitoring and SIEM",
+            "buyer": "State Data Centre",
+            "org_path": "Government e-Marketplace",
+            "summary": "Managed SOC and SIEM monitoring with strict turnover criteria.",
+            "published_date": now.isoformat(),
+            "deadline": (now + timedelta(days=15)).isoformat(),
+            "url": "https://gem.gov.in/sample/siem-monitoring-rfp",
+            "documents": ["https://gem.gov.in/sample/siem-monitoring-rfp/scope.pdf"],
+            "source_status": "open",
+        },
+    ]

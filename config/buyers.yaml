@@ -1,0 +1,25 @@
+buyers:
+  - name: Survey of India
+    weight: 15
+  - name: Department of Posts
+    weight: 10
+  - name: Indian Railways
+    weight: 14
+  - name: RailTel
+    weight: 12
+  - name: DRDO
+    weight: 15
+  - name: Ministry of Defence
+    weight: 15
+  - name: Bharat Electronics
+    weight: 13
+  - name: Smart City
+    weight: 11
+  - name: National Informatics Centre
+    weight: 14
+  - name: State Data Centre
+    weight: 11
+  - name: Police
+    weight: 10
+  - name: Municipal Corporation
+    weight: 9

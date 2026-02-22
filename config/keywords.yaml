@@ -1,0 +1,76 @@
+drones_uav:
+  - drone
+  - drones
+  - uav
+  - uas
+  - multicopter
+  - quadcopter
+  - aerial survey
+  - drone mapping
+  - payload integration
+  - remote sensing
+  - uav analytics
+  - anti-drone
+
+robotics:
+  - robot
+  - robotics
+  - autonomous mobile robot
+  - amr
+  - ugv
+  - manipulator
+  - machine vision
+  - industrial automation
+  - cobot
+  - mechatronics
+  - warehouse automation
+
+it_cyber_ai:
+  - cybersecurity
+  - cyber security
+  - siem
+  - soc
+  - noc
+  - cloud
+  - data center
+  - ai
+  - machine learning
+  - analytics platform
+  - software development
+  - application maintenance
+  - it infrastructure
+  - network security
+  - digital transformation
+
+procurement_terms:
+  - eoi
+  - rfp
+  - tender
+  - bid
+  - proposal
+  - expression of interest
+  - request for proposal
+
+scope_terms:
+  - scope of work
+  - technical specification
+  - boq
+  - bom
+  - sow
+  - compliance matrix
+  - eligibility criteria
+
+service_terms:
+  - managed service
+  - operation and maintenance
+  - amc
+  - support services
+  - deployment services
+
+strict_terms:
+  - turnover
+  - prior experience
+  - past performance
+  - emd
+  - pbg
+  - oem authorization

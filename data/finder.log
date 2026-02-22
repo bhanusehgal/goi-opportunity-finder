@@ -1,0 +1,64 @@
+2026-02-21 02:45:01,490 | INFO | goi_finder | Logging initialized at level INFO
+2026-02-21 02:45:01,492 | INFO | goi_finder | Run started at 2026-02-21T02:45:01.492183+00:00
+2026-02-21 02:45:06,524 | INFO | goi_finder | eProcure parsed 2 records from https://eprocure.gov.in/cppp/latestactivetendersnew/cpppdata
+2026-02-21 02:45:06,525 | INFO | goi_finder | eprocure fetched=2
+2026-02-21 02:45:29,416 | WARNING | goi_finder | GeM request failed (attempt=1): HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: /bids (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x000001D4681FD940>, 'Connection to gem.gov.in timed out. (connect timeout=25)'))
+2026-02-21 02:45:52,286 | WARNING | goi_finder | GeM request failed (attempt=2): HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: /bids (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x000001D4681FE0C0>, 'Connection to gem.gov.in timed out. (connect timeout=25)'))
+2026-02-21 02:46:15,215 | WARNING | goi_finder | GeM request failed (attempt=3): HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: /bids (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x000001D4681FE7E0>, 'Connection to gem.gov.in timed out. (connect timeout=25)'))
+2026-02-21 02:46:15,216 | WARNING | goi_finder | GeM parsing failed, using fallback sample records.
+2026-02-21 02:46:15,216 | INFO | goi_finder | gem fetched=2
+2026-02-21 02:46:18,502 | INFO | goi_finder | iDEX parsed 14 records
+2026-02-21 02:46:18,504 | INFO | goi_finder | idex fetched=14
+2026-02-21 02:46:18,513 | INFO | goi_finder | normalized=18
+2026-02-21 02:46:18,517 | INFO | goi_finder | kept_after_filter_score=2
+2026-02-21 02:46:18,534 | WARNING | goi_finder.emailer | Email skipped: set SMTP_HOST, EMAIL_TO, and EMAIL_FROM/SMTP_USER in environment.
+2026-02-21 02:46:18,545 | INFO | goi_finder | Run completed | fetched=18 kept=2 new=2 emailed=0 errors=0
+2026-02-21 02:46:58,700 | INFO | goi_finder | Logging initialized at level INFO
+2026-02-21 02:46:58,701 | INFO | goi_finder | Run started at 2026-02-21T02:46:58.701741+00:00
+2026-02-21 02:47:01,200 | INFO | goi_finder | eProcure cache hit: https://eprocure.gov.in/cppp/latestactivetendersnew/cpppdata
+2026-02-21 02:47:01,404 | INFO | goi_finder | eProcure parsed 2 records from https://eprocure.gov.in/cppp/latestactivetendersnew/cpppdata
+2026-02-21 02:47:01,404 | INFO | goi_finder | eprocure fetched=2
+2026-02-21 02:47:24,340 | WARNING | goi_finder | GeM request failed (attempt=1): HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: /bids (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000022E3AA34290>, 'Connection to gem.gov.in timed out. (connect timeout=25)'))
+2026-02-21 02:47:46,908 | WARNING | goi_finder | GeM request failed (attempt=2): HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: /bids (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000022E3AC725D0>, 'Connection to gem.gov.in timed out. (connect timeout=25)'))
+2026-02-21 02:48:09,771 | WARNING | goi_finder | GeM request failed (attempt=3): HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: /bids (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000022E3AC72CF0>, 'Connection to gem.gov.in timed out. (connect timeout=25)'))
+2026-02-21 02:48:09,773 | WARNING | goi_finder | GeM parsing failed, using fallback sample records.
+2026-02-21 02:48:09,773 | INFO | goi_finder | gem fetched=2
+2026-02-21 02:48:10,858 | INFO | goi_finder | iDEX cache hit
+2026-02-21 02:48:11,034 | INFO | goi_finder | iDEX parsed 14 records
+2026-02-21 02:48:11,034 | INFO | goi_finder | idex fetched=14
+2026-02-21 02:48:11,047 | INFO | goi_finder | normalized=18
+2026-02-21 02:48:11,049 | INFO | goi_finder | kept_after_filter_score=2
+2026-02-21 02:48:11,080 | INFO | goi_finder | No new opportunities after dedupe. Email not sent.
+2026-02-21 02:48:11,088 | INFO | goi_finder | Run completed | fetched=18 kept=2 new=0 emailed=0 errors=0
+2026-02-22 02:14:03,254 | INFO | goi_finder | Logging initialized at level INFO
+2026-02-22 02:14:03,254 | INFO | goi_finder | Run started at 2026-02-22T02:14:03.254058+00:00
+2026-02-22 02:14:09,872 | INFO | goi_finder | eProcure parsed 2 records from https://eprocure.gov.in/cppp/latestactivetendersnew/cpppdata
+2026-02-22 02:14:09,872 | INFO | goi_finder | eprocure fetched=2
+2026-02-22 02:14:30,692 | WARNING | goi_finder | GeM request failed (attempt=1): HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: /bids (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x00000242CCEEE1B0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2026-02-22 02:14:50,196 | WARNING | goi_finder | GeM request failed (attempt=2): HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: /bids (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x00000242CCEEE960>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2026-02-22 02:15:09,704 | WARNING | goi_finder | GeM request failed (attempt=3): HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: /bids (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x00000242CCEEF0B0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2026-02-22 02:15:09,705 | WARNING | goi_finder | GeM parsing failed, using fallback sample records.
+2026-02-22 02:15:09,705 | INFO | goi_finder | gem fetched=2
+2026-02-22 02:15:12,823 | INFO | goi_finder | iDEX parsed 14 records
+2026-02-22 02:15:12,824 | INFO | goi_finder | idex fetched=14
+2026-02-22 02:15:12,828 | INFO | goi_finder | normalized=18
+2026-02-22 02:15:12,829 | INFO | goi_finder | kept_after_filter_score=2
+2026-02-22 02:15:12,843 | INFO | goi_finder | No new opportunities after dedupe. Email not sent.
+2026-02-22 02:15:12,847 | INFO | goi_finder | Run completed | fetched=18 kept=2 new=0 emailed=0 errors=0
+2026-02-22 02:18:29,777 | INFO | goi_finder | Logging initialized at level INFO
+2026-02-22 02:18:29,778 | INFO | goi_finder | Run started at 2026-02-22T02:18:29.777290+00:00
+2026-02-22 02:18:30,623 | INFO | goi_finder | eProcure cache hit: https://eprocure.gov.in/cppp/latestactivetendersnew/cpppdata
+2026-02-22 02:18:30,669 | INFO | goi_finder | eProcure parsed 2 records from https://eprocure.gov.in/cppp/latestactivetendersnew/cpppdata
+2026-02-22 02:18:30,670 | INFO | goi_finder | eprocure fetched=2
+2026-02-22 02:18:50,165 | WARNING | goi_finder | GeM request failed (attempt=1): HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: /bids (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x0000018B3CB615B0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2026-02-22 02:19:09,660 | WARNING | goi_finder | GeM request failed (attempt=2): HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: /bids (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x0000018B3CB62510>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2026-02-22 02:19:29,163 | WARNING | goi_finder | GeM request failed (attempt=3): HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: /bids (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x0000018B3CB62C60>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2026-02-22 02:19:29,163 | WARNING | goi_finder | GeM parsing failed, using fallback sample records.
+2026-02-22 02:19:29,164 | INFO | goi_finder | gem fetched=2
+2026-02-22 02:19:30,649 | INFO | goi_finder | iDEX cache hit
+2026-02-22 02:19:30,697 | INFO | goi_finder | iDEX parsed 14 records
+2026-02-22 02:19:30,697 | INFO | goi_finder | idex fetched=14
+2026-02-22 02:19:30,701 | INFO | goi_finder | normalized=18
+2026-02-22 02:19:30,702 | INFO | goi_finder | kept_after_filter_score=2
+2026-02-22 02:19:30,718 | INFO | goi_finder | No new opportunities after dedupe. Email not sent.
+2026-02-22 02:19:30,722 | INFO | goi_finder | Run completed | fetched=18 kept=2 new=0 emailed=0 errors=0

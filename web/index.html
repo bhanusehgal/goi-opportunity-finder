@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GoI Opportunity Finder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-a"></div>
+    <div class="bg-orb orb-b"></div>
+
+    <main class="page">
+      <header class="hero">
+        <p class="kicker">Government of India Intelligence</p>
+        <h1>GoI Opportunity Finder</h1>
+        <p class="subtitle">
+          Daily discovery and ranking for Drones/UAV, Robotics, and IT/Cyber opportunities.
+        </p>
+        <div class="stats" id="stats">
+          <article class="card stat">
+            <span class="label">Total Opportunities</span>
+            <strong id="totalCount">0</strong>
+          </article>
+          <article class="card stat">
+            <span class="label">New (Latest Run)</span>
+            <strong id="newCount">0</strong>
+          </article>
+          <article class="card stat">
+            <span class="label">Generated At</span>
+            <strong id="generatedAt">N/A</strong>
+          </article>
+        </div>
+      </header>
+
+      <section class="card section">
+        <div class="section-head">
+          <h2>Top Opportunities</h2>
+          <input
+            id="searchInput"
+            class="search"
+            type="search"
+            placeholder="Search title, buyer, keywords..."
+          />
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Buyer</th>
+                <th>Source</th>
+                <th>Deadline</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody id="opportunityRows">
+              <tr>
+                <td colspan="7">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="card section">
+          <h2>Drones/UAV</h2>
+          <ul id="dronesList" class="group-list"></ul>
+        </article>
+        <article class="card section">
+          <h2>Robotics</h2>
+          <ul id="roboticsList" class="group-list"></ul>
+        </article>
+        <article class="card section">
+          <h2>IT/Cyber/AI</h2>
+          <ul id="itList" class="group-list"></ul>
+        </article>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

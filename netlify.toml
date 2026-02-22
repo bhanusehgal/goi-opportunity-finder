@@ -1,0 +1,3 @@
+[build]
+command = "python export_static.py"
+publish = "web"

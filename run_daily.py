@@ -1,0 +1,172 @@
+"""Daily runner for GoI Opportunity Finder."""
+
+from __future__ import annotations
+
+from datetime import datetime, timezone
+import os
+from pathlib import Path
+import sys
+from typing import Any
+
+from dotenv import load_dotenv
+import yaml
+
+from connectors.eprocure import fetch_opportunities as fetch_eprocure
+from connectors.gem import fetch_opportunities as fetch_gem
+from connectors.idex import fetch_opportunities as fetch_idex
+from core.dedupe import dedupe_opportunities
+from core.digest import generate_digest
+from core.emailer import send_email
+from core.logging_setup import setup_logging
+from core.normalize import normalize_records
+from core.scoring import hard_filter, score_opportunity
+from core.storage import Storage
+
+BASE_DIR = Path(__file__).resolve().parent
+CONFIG_DIR = BASE_DIR / "config"
+DATA_DIR = BASE_DIR / "data"
+CACHE_DIR = DATA_DIR / "cache"
+DB_PATH = DATA_DIR / "db.sqlite"
+
+
+def load_yaml(path: Path) -> dict[str, Any]:
+    with path.open("r", encoding="utf-8") as handle:
+        loaded = yaml.safe_load(handle) or {}
+    if not isinstance(loaded, dict):
+        raise ValueError(f"YAML at {path} must be a mapping")
+    return loaded
+
+
+def load_scoring_config() -> dict[str, Any]:
+    keywords_cfg = load_yaml(CONFIG_DIR / "keywords.yaml")
+    negatives_cfg = load_yaml(CONFIG_DIR / "negatives.yaml")
+    buyers_cfg = load_yaml(CONFIG_DIR / "buyers.yaml")
+
+    allow_negative = os.getenv("ALLOW_NEGATIVE_WITH_PENALTY", "false").strip().lower()
+    allow_negative_bool = allow_negative in {"1", "true", "yes", "y"}
+
+    config = {
+        "keyword_packs": {
+            "drones_uav": keywords_cfg.get("drones_uav", []),
+            "robotics": keywords_cfg.get("robotics", []),
+            "it_cyber_ai": keywords_cfg.get("it_cyber_ai", []),
+        },
+        "procurement_terms": keywords_cfg.get("procurement_terms", []),
+        "scope_terms": keywords_cfg.get("scope_terms", []),
+        "service_terms": keywords_cfg.get("service_terms", []),
+        "strict_terms": keywords_cfg.get("strict_terms", []),
+        "negative_keywords": negatives_cfg.get("negative_keywords", []),
+        "buyers": buyers_cfg.get("buyers", []),
+        "allow_negative_with_penalty": allow_negative_bool,
+    }
+    return config
+
+
+def main() -> int:
+    load_dotenv(BASE_DIR / ".env")
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+    logger = setup_logging(
+        level=os.getenv("LOG_LEVEL", "INFO"),
+        log_file=DATA_DIR / "finder.log",
+    )
+    run_ts = datetime.now(timezone.utc)
+
+    logger.info("Run started at %s", run_ts.isoformat())
+    config = load_scoring_config()
+
+    connectors = {
+        "eprocure": fetch_eprocure,
+        "gem": fetch_gem,
+        "idex": fetch_idex,
+    }
+
+    fetched_count = 0
+    errors: list[str] = []
+    raw_records_by_source: dict[str, list[dict[str, Any]]] = {}
+
+    for source, fetch_fn in connectors.items():
+        try:
+            records = fetch_fn(cache_dir=CACHE_DIR, logger=logger)
+            raw_records_by_source[source] = records
+            fetched_count += len(records)
+            logger.info("%s fetched=%s", source, len(records))
+        except Exception as exc:
+            message = f"{source}: {exc}"
+            errors.append(message)
+            logger.exception("Connector failed for %s", source)
+
+    if fetched_count == 0 and len(errors) == len(connectors):
+        logger.error("Fatal: all connectors failed and no records were fetched.")
+        with Storage(DB_PATH) as storage:
+            storage.record_run(
+                run_ts=run_ts,
+                fetched_count=0,
+                kept_count=0,
+                new_count=0,
+                emailed_count=0,
+                errors=errors,
+            )
+        return 1
+
+    normalized = []
+    for source, records in raw_records_by_source.items():
+        normalized.extend(normalize_records(records, source=source, now=run_ts))
+    logger.info("normalized=%s", len(normalized))
+
+    kept = []
+    for item in normalized:
+        keep, _, _ = hard_filter(item, config)
+        if not keep:
+            continue
+        score_opportunity(item, config, today=run_ts.date())
+        if item.score <= 0:
+            continue
+        kept.append(item)
+    logger.info("kept_after_filter_score=%s", len(kept))
+
+    emailed_count = 0
+    new_count = 0
+    with Storage(DB_PATH) as storage:
+        existing = storage.load_existing_map()
+        deduped, duplicate_map = dedupe_opportunities(kept, existing_by_id=existing)
+        new_count, _, new_items = storage.upsert_opportunities(deduped, run_ts=run_ts)
+        storage.touch_seen(duplicate_map.values(), run_ts=run_ts)
+
+        digest_text, digest_html = generate_digest(
+            opportunities=new_items,
+            config=config,
+            run_ts=run_ts,
+            top_n=10,
+        )
+
+        if new_items:
+            subject = f"GoI Opportunity Finder Digest - {run_ts.date().isoformat()} ({len(new_items)} new)"
+            if send_email(subject=subject, text_body=digest_text, html_body=digest_html):
+                emailed_count = len(new_items)
+        else:
+            logger.info("No new opportunities after dedupe. Email not sent.")
+
+        storage.record_run(
+            run_ts=run_ts,
+            fetched_count=fetched_count,
+            kept_count=len(kept),
+            new_count=new_count,
+            emailed_count=emailed_count,
+            errors=errors,
+        )
+
+    logger.info(
+        "Run completed | fetched=%s kept=%s new=%s emailed=%s errors=%s",
+        fetched_count,
+        len(kept),
+        new_count,
+        emailed_count,
+        len(errors),
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
