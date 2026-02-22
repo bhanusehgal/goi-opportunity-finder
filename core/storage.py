@@ -91,6 +91,26 @@ class Storage:
         rows = self.conn.execute("SELECT * FROM opportunities").fetchall()
         return {row["unique_id"]: Opportunity.from_db_row(dict(row)) for row in rows}
 
+    def purge_placeholder_records(self) -> int:
+        """Remove placeholder/mock records that contain synthetic sample markers."""
+        cursor = self.conn.execute(
+            """
+            DELETE FROM opportunities
+            WHERE source_id LIKE '%SAMPLE%'
+               OR url LIKE '%/sample/%'
+            """
+        )
+        removed = int(cursor.rowcount or 0)
+        if removed:
+            self.conn.execute(
+                """
+                DELETE FROM decisions
+                WHERE unique_id NOT IN (SELECT unique_id FROM opportunities)
+                """
+            )
+        self.conn.commit()
+        return removed
+
     def _decision_status(self, unique_id: str) -> str | None:
         row = self.conn.execute(
             "SELECT status FROM decisions WHERE unique_id = ?",

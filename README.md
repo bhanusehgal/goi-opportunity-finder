@@ -191,3 +191,5 @@ If running from Windows, schedule via WSL cron or Task Scheduler equivalent.
 - Uses local HTML cache with freshness window
 - Retries with fallback to stale cache and sample records
 - Sends explicit user-agent
+
+Fallback sample records are marked as inactive mock entries and excluded from live dashboard output. This prevents broken placeholder links from appearing as real opportunities.

@@ -1,6 +1,14 @@
 {
-  "generated_at": "2026-02-22T02:18:29.777290+00:00",
+  "generated_at": "2026-02-22T05:21:25.632040+00:00",
   "runs": [
+    {
+      "run_ts": "2026-02-22T05:21:25.632040+00:00",
+      "fetched_count": 18,
+      "kept_count": 0,
+      "new_count": 0,
+      "emailed_count": 0,
+      "error_count": 0
+    },
     {
       "run_ts": "2026-02-22T02:18:29.777290+00:00",
       "fetched_count": 18,
@@ -34,59 +42,5 @@
       "error_count": 0
     }
   ],
-  "opportunities": [
-    {
-      "unique_id": "451c316cca3c6402bdbb0b3e0e6e70a92b0cfe60c3f51bc321b6da6902708eb3",
-      "source": "gem",
-      "source_id": "GEM-SAMPLE-002",
-      "title": "RFP for Network Security Monitoring and SIEM",
-      "buyer": "State Data Centre",
-      "org_path": "Government e-Marketplace",
-      "summary": "Managed SOC and SIEM monitoring with strict turnover criteria.",
-      "published_date": "2026-02-21",
-      "deadline": "2026-03-08",
-      "url": "https://gem.gov.in/sample/siem-monitoring-rfp",
-      "documents": [
-        "https://gem.gov.in/sample/siem-monitoring-rfp/scope.pdf"
-      ],
-      "keywords_hit": [
-        "buyer:State Data Centre",
-        "deadline_window",
-        "documents_available",
-        "network security",
-        "rfp",
-        "siem"
-      ],
-      "score": 86,
-      "status": "seen",
-      "first_seen_ts": "2026-02-21T02:45:01.492183+00:00",
-      "last_seen_ts": "2026-02-22T02:18:29.777290+00:00"
-    },
-    {
-      "unique_id": "397b340d4014b28c18fe9ce4f317a8c4290e9647d4f75d0aa4c79f66d82ac04c",
-      "source": "gem",
-      "source_id": "GEM-SAMPLE-001",
-      "title": "Bid for Industrial Robotics Cell Setup and Integration",
-      "buyer": "Department of Heavy Industry",
-      "org_path": "Government e-Marketplace",
-      "summary": "GeM bid for robotics automation line, integrator services, and AMC.",
-      "published_date": "2026-02-21",
-      "deadline": "2026-03-13",
-      "url": "https://gem.gov.in/sample/robotics-bid",
-      "documents": [
-        "https://gem.gov.in/sample/robotics-bid/rfp.pdf"
-      ],
-      "keywords_hit": [
-        "bid",
-        "deadline_window",
-        "documents_available",
-        "robot",
-        "robotics"
-      ],
-      "score": 75,
-      "status": "seen",
-      "first_seen_ts": "2026-02-21T02:45:01.492183+00:00",
-      "last_seen_ts": "2026-02-22T02:18:29.777290+00:00"
-    }
-  ]
+  "opportunities": []
 }

@@ -52,6 +52,8 @@ def main() -> int:
                 first_seen_ts,
                 last_seen_ts
             FROM opportunities
+            WHERE source_id NOT LIKE '%SAMPLE%'
+              AND url NOT LIKE '%/sample/%'
             ORDER BY score DESC, last_seen_ts DESC
             LIMIT 300
             """

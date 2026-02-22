@@ -129,6 +129,10 @@ def main() -> int:
     emailed_count = 0
     new_count = 0
     with Storage(DB_PATH) as storage:
+        purged_count = storage.purge_placeholder_records()
+        if purged_count:
+            logger.info("purged_placeholder_records=%s", purged_count)
+
         existing = storage.load_existing_map()
         deduped, duplicate_map = dedupe_opportunities(kept, existing_by_id=existing)
         new_count, _, new_items = storage.upsert_opportunities(deduped, run_ts=run_ts)
