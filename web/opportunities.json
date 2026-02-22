@@ -1,6 +1,22 @@
 {
-  "generated_at": "2026-02-22T05:21:25.632040+00:00",
+  "generated_at": "2026-02-22T06:07:01.845086+00:00",
   "runs": [
+    {
+      "run_ts": "2026-02-22T06:07:01.845086+00:00",
+      "fetched_count": 46,
+      "kept_count": 9,
+      "new_count": 6,
+      "emailed_count": 0,
+      "error_count": 0
+    },
+    {
+      "run_ts": "2026-02-22T05:53:14.163413+00:00",
+      "fetched_count": 18,
+      "kept_count": 0,
+      "new_count": 0,
+      "emailed_count": 0,
+      "error_count": 0
+    },
     {
       "run_ts": "2026-02-22T05:21:25.632040+00:00",
       "fetched_count": 18,
@@ -42,5 +58,131 @@
       "error_count": 0
     }
   ],
-  "opportunities": []
+  "opportunities": [
+    {
+      "unique_id": "2209b6e252ae44b4ef8a8f7916144ee0136ce406107e0cbe20b6c943f917427b",
+      "source": "eprocure",
+      "source_id": "eprocure",
+      "title": "25/EE(C)/Navi Mumbai-I/2025-26",
+      "buyer": "Central Public Works Department (CPWD)",
+      "org_path": "Central Public Works Department (CPWD)",
+      "summary": "8. 21-Feb-2026 07:31 PM 02-Mar-2026 03:00 PM 02-Mar-2026 03:30 PM 25/EE(C)/Navi Mumbai-I/2025-26 /25/EE(C)/Navi Mumbai-I/2025-26/144498 Central Public Works Department (CPWD) --",
+      "published_date": "2026-02-21",
+      "deadline": "2026-03-02",
+      "url": "https://eprocure.gov.in/cppp/tendersfullview/MTM1NjU1Mzk=A13h1OGQ2NzAxYTMwZTJhNTIxMGNiNmEwM2EzNmNhYWZhODk=A13h1OGQ2NzAxYTMwZTJhNTIxMGNiNmEwM2EzNmNhYWZhODk=A13h1MTc3MTcyNjQ0OA==A13h1MjUvRUUoQykvTmF2aSBNdW1iYWktSS8yMDI1LTI2A13h1MTQ0NDk4",
+      "documents": [],
+      "keywords_hit": [
+        "ai",
+        "deadline_window"
+      ],
+      "score": 35,
+      "status": "seen",
+      "first_seen_ts": "2026-02-22T06:07:01.845086+00:00",
+      "last_seen_ts": "2026-02-22T06:07:01.845086+00:00"
+    },
+    {
+      "unique_id": "09f0f82848c9b304a6a725bb73e78a598d3fe5fb14874656d9376f1f87b588bc",
+      "source": "eprocure",
+      "source_id": "eprocure",
+      "title": "Construction of RCC drain north-west side inpit weigh bridge under ROCP.",
+      "buyer": "Eastern Coalfields Limited",
+      "org_path": "Eastern Coalfields Limited",
+      "summary": "21. 21-Feb-2026 06:55 PM 03-Mar-2026 06:55 PM 05-Mar-2026 12:00 PM Construction of RCC drain north-west side inpit weigh bridge under ROCP. /ECL/RJML/AGM/AE(C)/ e-Ten/25-26/550 Dt-21.02.2026/2026_ECL_354103_1 Eastern Coalfields Limited --",
+      "published_date": "2026-02-21",
+      "deadline": "2026-03-03",
+      "url": "https://eprocure.gov.in/cppp/tendersfullview/MTM1NjQwNTk=A13h1OGQ2NzAxYTMwZTJhNTIxMGNiNmEwM2EzNmNhYWZhODk=A13h1OGQ2NzAxYTMwZTJhNTIxMGNiNmEwM2EzNmNhYWZhODk=A13h1MTc3MTc0MDQzMA==A13h1RUNML1JKTUwvQUdNL0FFKEMpLyBlLVRlbi8yNS0yNi81NTAgRHQtMjEuMDIuMjAyNg==A13h1MjAyNl9FQ0xfMzU0MTAzXzE=",
+      "documents": [],
+      "keywords_hit": [
+        "ai",
+        "deadline_window"
+      ],
+      "score": 35,
+      "status": "new",
+      "first_seen_ts": "2026-02-22T06:07:01.845086+00:00",
+      "last_seen_ts": "2026-02-22T06:07:01.845086+00:00"
+    },
+    {
+      "unique_id": "5994b0ab088575d3313dde7042c182899bc459b89839cca2e713aea1fa7d4218",
+      "source": "eprocure",
+      "source_id": "eprocure",
+      "title": "Silt cleaning of sump and drain and manually cleaning of drains and culverts at EAST section at Jayant project",
+      "buyer": "Northern Coalfields Limited",
+      "org_path": "Northern Coalfields Limited",
+      "summary": "24. 21-Feb-2026 06:55 PM 04-Mar-2026 11:00 AM 05-Mar-2026 11:00 AM Silt cleaning of sump and drain and manually cleaning of drains and culverts at EAST section at Jayant project /JNT/CED/25-26/46 Dated 21.02.2026/2026_NCL_354092_1 Northern Coalfields Limited --",
+      "published_date": "2026-02-21",
+      "deadline": "2026-03-04",
+      "url": "https://eprocure.gov.in/cppp/tendersfullview/MTM1NjQwNzc=A13h1OGQ2NzAxYTMwZTJhNTIxMGNiNmEwM2EzNmNhYWZhODk=A13h1OGQ2NzAxYTMwZTJhNTIxMGNiNmEwM2EzNmNhYWZhODk=A13h1MTc3MTc0MDQzMA==A13h1Sk5UL0NFRC8yNS0yNi80NiBEYXRlZCAyMS4wMi4yMDI2A13h1MjAyNl9OQ0xfMzU0MDkyXzE=",
+      "documents": [],
+      "keywords_hit": [
+        "ai",
+        "deadline_window"
+      ],
+      "score": 35,
+      "status": "seen",
+      "first_seen_ts": "2026-02-22T06:07:01.845086+00:00",
+      "last_seen_ts": "2026-02-22T06:07:01.845086+00:00"
+    },
+    {
+      "unique_id": "9422da3885f4938f9613de11f16524b97e0d0c3ee8d9a7f9f181b6e480bc87e3",
+      "source": "eprocure",
+      "source_id": "eprocure",
+      "title": "Construction of RCC branch drain with cover slab at Hijukita rehab site under Rajmahal Area.",
+      "buyer": "Eastern Coalfields Limited",
+      "org_path": "Eastern Coalfields Limited",
+      "summary": "25. 21-Feb-2026 06:55 PM 03-Mar-2026 06:55 PM 05-Mar-2026 12:00 PM Construction of RCC branch drain with cover slab at Hijukita rehab site under Rajmahal Area. /ECL/RJML/AGM/AE(C)/ e-Ten/25-26/549 Dt-21.02.2026/2026_ECL_354097_1 Eastern Coalfields Limited --",
+      "published_date": "2026-02-21",
+      "deadline": "2026-03-03",
+      "url": "https://eprocure.gov.in/cppp/tendersfullview/MTM1NjQwNTY=A13h1OGQ2NzAxYTMwZTJhNTIxMGNiNmEwM2EzNmNhYWZhODk=A13h1OGQ2NzAxYTMwZTJhNTIxMGNiNmEwM2EzNmNhYWZhODk=A13h1MTc3MTc0MDQzMA==A13h1RUNML1JKTUwvQUdNL0FFKEMpLyBlLVRlbi8yNS0yNi81NDkgRHQtMjEuMDIuMjAyNg==A13h1MjAyNl9FQ0xfMzU0MDk3XzE=",
+      "documents": [],
+      "keywords_hit": [
+        "ai",
+        "deadline_window"
+      ],
+      "score": 35,
+      "status": "new",
+      "first_seen_ts": "2026-02-22T06:07:01.845086+00:00",
+      "last_seen_ts": "2026-02-22T06:07:01.845086+00:00"
+    },
+    {
+      "unique_id": "eb6021a8c92e679bcd6d317d8ecb5e25d3f304d6a2caad83b74962333f47daf0",
+      "source": "eprocure",
+      "source_id": "eprocure",
+      "title": "Engagement of hydraulic excavator for levelling, dressing, cutting etc. at Dakaita rehab site under Rajmahal Area.",
+      "buyer": "Eastern Coalfields Limited",
+      "org_path": "Eastern Coalfields Limited",
+      "summary": "28. 21-Feb-2026 06:55 PM 03-Mar-2026 06:55 PM 05-Mar-2026 12:00 PM Engagement of hydraulic excavator for levelling, dressing, cutting etc. at Dakaita rehab site under Rajmahal Area. /ECL/RJML/AGM/AE(C)/ e-Ten/25-26/547 Dt-21.02.2026/2026_ECL_354091_1 Eastern Coalfields Limited --",
+      "published_date": "2026-02-21",
+      "deadline": "2026-03-03",
+      "url": "https://eprocure.gov.in/cppp/tendersfullview/MTM1NjM5ODQ=A13h1OGQ2NzAxYTMwZTJhNTIxMGNiNmEwM2EzNmNhYWZhODk=A13h1OGQ2NzAxYTMwZTJhNTIxMGNiNmEwM2EzNmNhYWZhODk=A13h1MTc3MTc0MDQzMA==A13h1RUNML1JKTUwvQUdNL0FFKEMpLyBlLVRlbi8yNS0yNi81NDcgRHQtMjEuMDIuMjAyNg==A13h1MjAyNl9FQ0xfMzU0MDkxXzE=",
+      "documents": [],
+      "keywords_hit": [
+        "ai",
+        "deadline_window"
+      ],
+      "score": 35,
+      "status": "new",
+      "first_seen_ts": "2026-02-22T06:07:01.845086+00:00",
+      "last_seen_ts": "2026-02-22T06:07:01.845086+00:00"
+    },
+    {
+      "unique_id": "5aabc2a18a9f84a1a72d038f2720986c50dc857e9e3c4138ffc08a86964aee4c",
+      "source": "eprocure",
+      "source_id": "eprocure",
+      "title": "Servicing and Repair of SKF make hydraulic spindle",
+      "buyer": "NTPC Limited",
+      "org_path": "NTPC Limited",
+      "summary": "19. 21-Feb-2026 06:55 PM 24-Feb-2026 12:00 PM 24-Feb-2026 04:00 PM Servicing and Repair of SKF make hydraulic spindle /NTPC/USSC-CPG3/9900320429/2026_NTPC_105418_1 NTPC Limited --",
+      "published_date": "2026-02-21",
+      "deadline": "2026-02-24",
+      "url": "https://eprocure.gov.in/cppp/tendersfullview/MTM1NjM5ODE=A13h1OGQ2NzAxYTMwZTJhNTIxMGNiNmEwM2EzNmNhYWZhODk=A13h1OGQ2NzAxYTMwZTJhNTIxMGNiNmEwM2EzNmNhYWZhODk=A13h1MTc3MTc0MDQyNQ==A13h1TlRQQy9VU1NDLUNQRzMvOTkwMDMyMDQyOQ==A13h1MjAyNl9OVFBDXzEwNTQxOF8x",
+      "documents": [],
+      "keywords_hit": [
+        "ai"
+      ],
+      "score": 25,
+      "status": "new",
+      "first_seen_ts": "2026-02-22T06:07:01.845086+00:00",
+      "last_seen_ts": "2026-02-22T06:07:01.845086+00:00"
+    }
+  ]
 }

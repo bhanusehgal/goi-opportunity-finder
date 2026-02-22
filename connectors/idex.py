@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 import hashlib
 import json
 import logging
@@ -27,8 +27,11 @@ def fetch_opportunities(
     logger: logging.Logger,
     timeout: int = 25,
     max_items: int = 50,
+    published_from: date | None = None,
+    published_to: date | None = None,
 ) -> list[dict[str, Any]]:
     """Fetch current iDEX challenges."""
+    _ = (published_from, published_to)  # Reserved for future source-level range filtering.
     cache_dir.mkdir(parents=True, exist_ok=True)
     html = _fetch_html_with_cache(URL, cache_dir=cache_dir, logger=logger, timeout=timeout)
     if html:

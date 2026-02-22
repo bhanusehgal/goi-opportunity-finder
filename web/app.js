@@ -3,6 +3,11 @@ const state = {
   data: null,
   generatedAt: null,
   pollTimer: null,
+  filters: {
+    search: "",
+    publishedFrom: "",
+    publishedTo: "",
+  },
 };
 
 const HOOK_STORAGE_KEY = "goi_finder_netlify_build_hook";
@@ -82,21 +87,60 @@ function renderGroups(rows) {
   document.getElementById("itList").innerHTML = it.map(listHtml).join("") || "<li>No items</li>";
 }
 
-function attachSearch() {
-  const input = document.getElementById("searchInput");
-  input.addEventListener("input", () => {
-    const q = input.value.trim().toLowerCase();
-    if (!q) {
-      renderTable(state.rows);
-      renderGroups(state.rows);
-      return;
+function dateToNumber(value) {
+  if (!value) return null;
+  const n = Number(String(value).replaceAll("-", ""));
+  return Number.isFinite(n) ? n : null;
+}
+
+function applyClientFilters() {
+  const q = state.filters.search;
+  const fromNum = dateToNumber(state.filters.publishedFrom);
+  const toNum = dateToNumber(state.filters.publishedTo);
+
+  const filtered = state.rows.filter((item) => {
+    const hay = `${item.title || ""} ${item.buyer || ""} ${item.org_path || ""} ${(item.keywords_hit || []).join(" ")}`.toLowerCase();
+    if (q && !hay.includes(q)) {
+      return false;
     }
-    const filtered = state.rows.filter((item) => {
-      const hay = `${item.title || ""} ${item.buyer || ""} ${item.org_path || ""} ${(item.keywords_hit || []).join(" ")}`.toLowerCase();
-      return hay.includes(q);
-    });
-    renderTable(filtered);
-    renderGroups(filtered);
+
+    if (fromNum !== null || toNum !== null) {
+      const pubNum = dateToNumber(item.published_date);
+      if (pubNum === null) {
+        return false;
+      }
+      if (fromNum !== null && pubNum < fromNum) {
+        return false;
+      }
+      if (toNum !== null && pubNum > toNum) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  renderTable(filtered);
+  renderGroups(filtered);
+}
+
+function attachFilters() {
+  const searchInput = document.getElementById("searchInput");
+  const fromInput = document.getElementById("publishedFrom");
+  const toInput = document.getElementById("publishedTo");
+
+  searchInput.addEventListener("input", () => {
+    state.filters.search = searchInput.value.trim().toLowerCase();
+    applyClientFilters();
+  });
+
+  fromInput.addEventListener("change", () => {
+    state.filters.publishedFrom = fromInput.value || "";
+    applyClientFilters();
+  });
+
+  toInput.addEventListener("change", () => {
+    state.filters.publishedTo = toInput.value || "";
+    applyClientFilters();
   });
 }
 
@@ -115,8 +159,7 @@ function applyData(data) {
   state.data = data;
   state.generatedAt = data.generated_at || null;
   renderStats(data);
-  renderTable(rows);
-  renderGroups(rows);
+  applyClientFilters();
 }
 
 function getBuildHookUrl() {
@@ -214,7 +257,7 @@ async function bootstrap() {
   try {
     const data = await fetchData();
     applyData(data);
-    attachSearch();
+    attachFilters();
     attachRefreshControls();
   } catch (err) {
     document.getElementById("opportunityRows").innerHTML = "<tr><td colspan='7'>Failed to load data.</td></tr>";

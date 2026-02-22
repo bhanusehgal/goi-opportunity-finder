@@ -12,6 +12,8 @@ from core.schema import Opportunity, utc_now
 DATE_FORMATS = (
     "%Y-%m-%d",
     "%d-%m-%Y",
+    "%d-%b-%Y",
+    "%d-%B-%Y",
     "%d/%m/%Y",
     "%Y/%m/%d",
     "%d.%m.%Y",

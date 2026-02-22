@@ -69,6 +69,8 @@ Edit `.env`:
 - `GOI_FINDER_USER_AGENT` (clear contact user-agent)
 - `REQUEST_DELAY_SECONDS` (default 1.5)
 - `ALLOW_NEGATIVE_WITH_PENALTY` (`true`/`false`)
+- `PUBLISHED_FROM`, `PUBLISHED_TO` (optional default date window in `YYYY-MM-DD`)
+- `EPROCURE_MAX_PAGES` (optional pagination cap for range backfills)
 
 No secrets are hardcoded in source.
 
@@ -78,6 +80,17 @@ No secrets are hardcoded in source.
 cd goi-opportunity-finder
 python run_daily.py
 ```
+
+Date-range crawl example (first two months of 2026):
+
+```bash
+cd goi-opportunity-finder
+python run_daily.py --published-from 2026-01-01 --published-to 2026-02-29
+python export_static.py
+```
+
+In date-range mode, eProcure paginates page-by-page and stops when `e-Published Date` goes older than `--published-from`.
+Optional safety cap: `--eprocure-max-pages 500`.
 
 Output artifacts:
 
@@ -117,6 +130,8 @@ Setup once:
 4. Paste the build-hook URL
 
 Then click `Refresh Live Sources` any time. The page will poll `opportunities.json` and auto-update when the new crawl is published.
+
+You can also use `Published from` and `Published to` fields in the dashboard to filter rendered opportunities by published date.
 
 ## Netlify Deploy (API)
 

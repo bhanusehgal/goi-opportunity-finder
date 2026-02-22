@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 from datetime import datetime, timezone
 import os
 from pathlib import Path
@@ -14,6 +15,7 @@ import yaml
 from connectors.eprocure import fetch_opportunities as fetch_eprocure
 from connectors.gem import fetch_opportunities as fetch_gem
 from connectors.idex import fetch_opportunities as fetch_idex
+from core.date_range import filter_by_published_date, parse_iso_date
 from core.dedupe import dedupe_opportunities
 from core.digest import generate_digest
 from core.emailer import send_email
@@ -27,6 +29,41 @@ CONFIG_DIR = BASE_DIR / "config"
 DATA_DIR = BASE_DIR / "data"
 CACHE_DIR = DATA_DIR / "cache"
 DB_PATH = DATA_DIR / "db.sqlite"
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI flags for run behavior."""
+    parser = argparse.ArgumentParser(description="GoI Opportunity Finder daily runner")
+    parser.add_argument(
+        "--published-from",
+        default=None,
+        help="Filter and crawl from this e-Published date (YYYY-MM-DD).",
+    )
+    parser.add_argument(
+        "--published-to",
+        default=None,
+        help="Filter and crawl up to this e-Published date (YYYY-MM-DD).",
+    )
+    parser.add_argument(
+        "--eprocure-max-pages",
+        default=None,
+        type=int,
+        help="Cap on eProcure pages to fetch when paginating.",
+    )
+    return parser.parse_args(argv)
+
+
+def _parse_optional_positive_int(value: str | None) -> int | None:
+    if value is None:
+        return None
+    text = value.strip()
+    if not text:
+        return None
+    try:
+        parsed = int(text)
+        return parsed if parsed > 0 else None
+    except ValueError:
+        return None
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -62,10 +99,11 @@ def load_scoring_config() -> dict[str, Any]:
     return config
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     load_dotenv(BASE_DIR / ".env")
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    args = parse_args(argv)
 
     logger = setup_logging(
         level=os.getenv("LOG_LEVEL", "INFO"),
@@ -75,6 +113,33 @@ def main() -> int:
 
     logger.info("Run started at %s", run_ts.isoformat())
     config = load_scoring_config()
+
+    env_published_from = os.getenv("PUBLISHED_FROM")
+    env_published_to = os.getenv("PUBLISHED_TO")
+    try:
+        published_from = parse_iso_date(args.published_from or env_published_from)
+        published_to = parse_iso_date(args.published_to or env_published_to)
+    except ValueError as exc:
+        logger.error(str(exc))
+        return 2
+    if published_from and published_to and published_from > published_to:
+        logger.error(
+            "Invalid date range: published-from (%s) is later than published-to (%s)",
+            published_from.isoformat(),
+            published_to.isoformat(),
+        )
+        return 2
+
+    eprocure_max_pages = args.eprocure_max_pages or _parse_optional_positive_int(
+        os.getenv("EPROCURE_MAX_PAGES")
+    )
+    if published_from or published_to:
+        logger.info(
+            "Date range enabled | published_from=%s published_to=%s eprocure_max_pages=%s",
+            published_from.isoformat() if published_from else None,
+            published_to.isoformat() if published_to else None,
+            eprocure_max_pages,
+        )
 
     connectors = {
         "eprocure": fetch_eprocure,
@@ -88,7 +153,15 @@ def main() -> int:
 
     for source, fetch_fn in connectors.items():
         try:
-            records = fetch_fn(cache_dir=CACHE_DIR, logger=logger)
+            fetch_kwargs: dict[str, Any] = {
+                "cache_dir": CACHE_DIR,
+                "logger": logger,
+                "published_from": published_from,
+                "published_to": published_to,
+            }
+            if source == "eprocure":
+                fetch_kwargs["max_pages"] = eprocure_max_pages
+            records = fetch_fn(**fetch_kwargs)
             raw_records_by_source[source] = records
             fetched_count += len(records)
             logger.info("%s fetched=%s", source, len(records))
@@ -113,6 +186,14 @@ def main() -> int:
     normalized = []
     for source, records in raw_records_by_source.items():
         normalized.extend(normalize_records(records, source=source, now=run_ts))
+    if published_from or published_to:
+        before = len(normalized)
+        normalized = filter_by_published_date(normalized, published_from, published_to)
+        logger.info(
+            "published_date_filter kept=%s dropped=%s",
+            len(normalized),
+            before - len(normalized),
+        )
     logger.info("normalized=%s", len(normalized))
 
     kept = []

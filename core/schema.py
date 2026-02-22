@@ -43,6 +43,8 @@ def _parse_date(value: Any) -> date | None:
         for fmt in (
             "%Y-%m-%d",
             "%d-%m-%Y",
+            "%d-%b-%Y",
+            "%d-%B-%Y",
             "%d/%m/%Y",
             "%Y/%m/%d",
             "%d %b %Y",

@@ -43,3 +43,20 @@ def test_normalize_closed_status_marked_ignore() -> None:
     opp = normalize_record(raw, source="gem")
     assert opp is not None
     assert opp.status == "ignore"
+
+
+def test_normalize_eprocure_dash_month_dates() -> None:
+    raw = {
+        "tender_id": "EPR-1",
+        "title": "Tender for Robotics Integration",
+        "url": "https://example.com/epr-1",
+        "published_date": "21-Feb-2026 09:18 PM",
+        "deadline": "03-Mar-2026 10:30 AM",
+        "status": "Open",
+    }
+    opp = normalize_record(raw, source="eprocure")
+    assert opp is not None
+    assert opp.published_date is not None
+    assert opp.published_date.isoformat() == "2026-02-21"
+    assert opp.deadline is not None
+    assert opp.deadline.isoformat() == "2026-03-03"
