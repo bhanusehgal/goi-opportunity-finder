@@ -1,0 +1,8 @@
+.env
+$null
+.pytest_cache/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.tmp

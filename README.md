@@ -102,6 +102,22 @@ python -m http.server 8080 --directory web
 
 Open `http://127.0.0.1:8080`.
 
+### Live Refresh Button (Hosted Netlify Site)
+
+The dashboard includes:
+
+- `Refresh Live Sources`: triggers a new Netlify build
+- `Set Build Hook`: saves your Netlify build-hook URL in browser local storage
+
+Setup once:
+
+1. In Netlify UI: `Site configuration` -> `Build & deploy` -> `Build hooks`
+2. Create a hook (for your production branch, usually `main`)
+3. Open your hosted dashboard and click `Set Build Hook`
+4. Paste the build-hook URL
+
+Then click `Refresh Live Sources` any time. The page will poll `opportunities.json` and auto-update when the new crawl is published.
+
 ## Netlify Deploy (API)
 
 Set in `.env` or shell:
@@ -118,7 +134,32 @@ python export_static.py
 python deploy_netlify.py
 ```
 
-Repository auto-deploy is configured via `netlify.toml` at repo root (`build.command=python export_static.py`, `publish=web`).
+Repository auto-deploy is configured via `netlify.toml` at repo root (`build.command=python run_daily.py && python export_static.py`, `publish=web`).
+
+## Auto Push To GitHub
+
+Manual one-time push:
+
+```bash
+cd goi-opportunity-finder
+git add README.md netlify.toml web/index.html web/styles.css web/app.js .gitignore scripts/auto_publish.py
+git commit -m "Add refresh controls and auto-publish helper"
+git push origin main
+```
+
+Automated local publish loop (no PAT required, uses your existing GitHub auth):
+
+```bash
+cd goi-opportunity-finder
+python scripts/auto_publish.py --watch
+```
+
+Behavior:
+
+- Polls every 20 seconds
+- Auto-commits and pushes eligible code/config changes
+- Skips runtime files like `data/`, `__pycache__/`, `.env`, and `$null`
+- Each push triggers Netlify auto-deploy (if site is linked to GitHub)
 
 ## Tests
 
